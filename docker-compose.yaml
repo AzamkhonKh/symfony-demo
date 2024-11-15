@@ -1,0 +1,73 @@
+version: '3.8'
+
+services:
+  # Symfony application container
+  app:
+    image: php:8.3-fpm  # Use the PHP version compatible with Symfony
+    container_name: symfony_app
+    working_dir: /var/www/symfony
+    volumes:
+      - .:/var/www/symfony  # Mount the current directory
+      - ./dockerfiles/php.ini:/usr/local/etc/php/php.ini # Custom PHP settings
+    networks:
+      - symfony_network
+    depends_on:
+      - db
+      - redis
+
+  # Web server
+  nginx:
+    image: nginx:latest
+    container_name: symfony_nginx
+    volumes:
+      - .:/var/www/symfony
+      - ./dockerfiles/default.conf:/etc/nginx/conf.d/default.conf  # Custom NGINX configuration
+    ports:
+      - "8000:80"  # Host port to access the app
+    networks:
+      - symfony_network
+    depends_on:
+      - app
+
+  # MySQL Database
+  db:
+    image: mysql:8.0
+    container_name: symfony_mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root_password  # Change for security
+      MYSQL_DATABASE: symfony_db
+      MYSQL_USER: symfony_user
+      MYSQL_PASSWORD: symfony_password
+    ports:
+      - "3306:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+    networks:
+      - symfony_network
+
+  # Redis Cache
+  redis:
+    image: redis:latest
+    container_name: symfony_redis
+    ports:
+      - "6379:6379"
+    networks:
+      - symfony_network
+
+  # Composer for managing dependencies
+  composer:
+    image: composer:latest
+    container_name: symfony_composer
+    working_dir: /var/www/symfony
+    volumes:
+      - .:/var/www/symfony
+    networks:
+      - symfony_network
+    command: ["composer", "install"]
+
+networks:
+  symfony_network:
+    driver: bridge
+
+volumes:
+  db_data:
