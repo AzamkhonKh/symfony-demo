@@ -14,7 +14,7 @@ composer-update:
 
 # PHPUnit bin/phpunit commands
 phpunit:
-	docker-compose run --rm $(PHP_CONTAINER) php bin/phpunit --verbose
+	docker-compose run --rm $(PHP_CONTAINER) php bin/phpunit
 
 # Symfony bin/console commands
 console:
