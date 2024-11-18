@@ -18,7 +18,7 @@ phpunit:
 
 # Symfony bin/console commands
 console:
-	docker-compose run --rm $(PHP_CONTAINER) php bin/console "$(cmd)"
+	docker-compose run --rm $(PHP_CONTAINER) php bin/console $(cmd)
 
 cache-clear:
 	docker-compose run --rm $(PHP_CONTAINER) php bin/console cache:clear
