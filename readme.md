@@ -1,4 +1,4 @@
-# **Scaffold Symfony API App with Sample Model, Controller, Service, and Docker File**
+# **Scaffold Symfony API App**
 
 This repository provides a scaffolded Symfony API application with Docker support. It includes a sample Product model, controller, and service, as well as useful commands for managing your application efficiently.
 
